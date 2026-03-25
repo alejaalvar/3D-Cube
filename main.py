@@ -13,6 +13,7 @@ WINDOW_SIZE: int = 800
 clock: pygame.time.Clock = pygame.time.Clock()  # control the fps
 window: pygame.Surface = pygame.display.set_mode((WINDOW_SIZE, WINDOW_SIZE))
 
+# We use this to convert a 3D point -> 2D point
 projection_matrix: List[List[int]] = [[1, 0, 0], [0, 1, 0], [0, 0, 0]]
 
 cube_points: List[List[int]] = [n for n in range(8)]
@@ -83,6 +84,7 @@ def main() -> None:
         clock.tick(60)  # 60 fps
         window.fill((0, 0, 0))  # clear the frame
 
+        # Our rotation matrices
         rotation_x: List[List[int | float]] = [
             [1, 0, 0],
             [0, cos(angle_x), -sin(angle_x)],
@@ -100,22 +102,24 @@ def main() -> None:
             [sin(angle_z), cos(angle_z), 0],
             [0, 0, 1],
         ]
+        points = []  # our 2D points
 
-        points = [0 for _ in range(len(cube_points))]
-        i: int = 0
+        # Rotate points & convert 3D points -> 2D points
         for point in cube_points:
             rotate_x = multiply_m(rotation_x, point)
             rotate_y = multiply_m(rotation_y, rotate_x)
             rotate_z = multiply_m(rotation_z, rotate_y)
 
-            point_2d = multiply_m(projection_matrix, rotate_z)
+            point_2d: List[List[int]] = multiply_m(projection_matrix, rotate_z)
 
+            # This drags the cube out of the top left cortner -> center
             x = (point_2d[0][0] * scale) + WINDOW_SIZE / 2
             y = (point_2d[1][0] * scale) + WINDOW_SIZE / 2
 
-            points[i] = (x, y)
-            i += 1
-            pygame.draw.circle(window, (255, 0, 0), (x, y), 5)
+            points.append((x, y))
+            pygame.draw.circle(
+                window, (255, 0, 0), (x, y), 5
+            )  # each red dot, thats why circle
 
         connect_points(0, 1, points)
         connect_points(1, 2, points)
@@ -152,6 +156,9 @@ def main() -> None:
                 angle_z -= ROTATE_SPEED
             if keys[pygame.K_e]:
                 angle_z += ROTATE_SPEED
+            if keys[pygame.K_LCTRL] and keys[pygame.K_c]:
+                pygame.quit()
+                return
 
         pygame.display.update()
 
