@@ -1,6 +1,7 @@
 import pygame
 from math import *
 
+ROTATE_SPEED = 0.02
 WINDOW_SIZE: int = 800
 clock = pygame.time.Clock()  # control the fps
 window = pygame.display.set_mode( (WINDOW_SIZE, WINDOW_SIZE) )
@@ -45,6 +46,7 @@ def connect_points(i, j, points):
 def main():
     scale = 100
     angle_x = angle_y = angle_z = 0
+
     while True:
         clock.tick(60)  # 60 fps
         window.fill((0,0,0))  # clear the frame
@@ -55,10 +57,6 @@ def main():
                       [0,1,0],[-sin(angle_y), 0, cos(angle_y)]]
 
         rotation_z = [[cos(angle_z), -sin(angle_z), 0], [sin(angle_z), cos(angle_z), 0], [0,0,1] ]
-
-        angle_x += 0.1
-        angle_y += 0.1
-        angle_z += 0.1
 
         points = [0 for _ in range(len(cube_points))]
         i = 0
@@ -94,6 +92,23 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_r]:
+                angle_y = angle_x = angle_z = 0
+            if keys[pygame.K_a]:
+                angle_y += ROTATE_SPEED
+            if keys[pygame.K_d]:
+                angle_y -= ROTATE_SPEED
+            if keys[pygame.K_w]:
+                angle_x += ROTATE_SPEED
+            if keys[pygame.K_s]:
+                angle_x -= ROTATE_SPEED
+            if keys[pygame.K_q]:
+                angle_z -= ROTATE_SPEED
+            if keys[pygame.K_e]:
+                angle_z += ROTATE_SPEED
+
         pygame.display.update()
 
 if __name__ == "__main__":
