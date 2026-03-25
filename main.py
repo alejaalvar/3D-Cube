@@ -3,6 +3,7 @@ from math import *
 
 WINDOW_SIZE: int = 800
 clock = pygame.time.Clock()  # control the fps
+window = pygame.display.set_mode( (WINDOW_SIZE, WINDOW_SIZE) )
 
 projection_matrix = [[1,0,0],
                      [0,1,0],
@@ -38,14 +39,15 @@ def multiply_m(a,b):
 
     return product
 
-def main():
-    window = pygame.display.set_mode( (WINDOW_SIZE, WINDOW_SIZE) )
+def connect_points(i, j, points):
+    pygame.draw.line(window, (255,255,255), (points[i]), (points[j]))
 
+def main():
     scale = 100
     angle_x = angle_y = angle_z = 0
     while True:
         clock.tick(60)  # 60 fps
-        window.fill((0,0,0))
+        window.fill((0,0,0))  # clear the frame
 
         rotation_x = [[1,0,0], [0, cos(angle_x), -sin(angle_x)], [0, sin(angle_x), cos(angle_x)]]
 
@@ -55,7 +57,11 @@ def main():
         rotation_z = [[cos(angle_z), -sin(angle_z), 0], [sin(angle_z), cos(angle_z), 0], [0,0,1] ]
 
         angle_x += 0.1
+        angle_y += 0.1
+        angle_z += 0.1
 
+        points = [0 for _ in range(len(cube_points))]
+        i = 0
         for point in cube_points:
             rotate_x = multiply_m(rotation_x, point)
             rotate_y = multiply_m(rotation_y, rotate_x)
@@ -66,7 +72,11 @@ def main():
             x = (point_2d[0][0] * scale) + WINDOW_SIZE / 2
             y = (point_2d[1][0] * scale) + WINDOW_SIZE / 2
 
+            points[i] = (x,y)
+            i += 1
             pygame.draw.circle(window, (255, 0, 0), (x, y), 5)
+
+        connect_points(0,1,points)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
