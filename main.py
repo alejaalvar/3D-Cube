@@ -1,4 +1,5 @@
 import pygame
+from math import *
 
 WINDOW_SIZE: int = 800
 clock = pygame.time.Clock()  # control the fps
@@ -41,11 +42,26 @@ def main():
     window = pygame.display.set_mode( (WINDOW_SIZE, WINDOW_SIZE) )
 
     scale = 100
+    angle_x = angle_y = angle_z = 0
     while True:
         clock.tick(60)  # 60 fps
+        window.fill((0,0,0))
+
+        rotation_x = [[1,0,0], [0, cos(angle_x), -sin(angle_x)], [0, sin(angle_x), cos(angle_x)]]
+
+        rotation_y = [[cos(angle_y), 0, sin(angle_y)],
+                      [0,1,0],[-sin(angle_y), 0, cos(angle_y)]]
+
+        rotation_z = [[cos(angle_z), -sin(angle_z), 0], [sin(angle_z), cos(angle_z), 0], [0,0,1] ]
+
+        angle_x += 0.1
 
         for point in cube_points:
-            point_2d = multiply_m(projection_matrix, point)
+            rotate_x = multiply_m(rotation_x, point)
+            rotate_y = multiply_m(rotation_y, rotate_x)
+            rotate_z = multiply_m(rotation_z, rotate_y)
+
+            point_2d = multiply_m(projection_matrix, rotate_z)
 
             x = (point_2d[0][0] * scale) + WINDOW_SIZE / 2
             y = (point_2d[1][0] * scale) + WINDOW_SIZE / 2
