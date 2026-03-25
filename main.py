@@ -77,6 +77,19 @@ def main():
             pygame.draw.circle(window, (255, 0, 0), (x, y), 5)
 
         connect_points(0,1,points)
+        connect_points(1,2,points)
+        connect_points(2,3,points)
+        connect_points(3,0,points)
+
+        connect_points(4,5,points)
+        connect_points(5,6,points)
+        connect_points(6,7,points)
+        connect_points(7,4,points)
+
+        connect_points(0,4,points)
+        connect_points(1,5,points)
+        connect_points(2,6,points)
+        connect_points(3,7,points)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
