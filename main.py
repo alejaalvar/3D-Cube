@@ -40,14 +40,15 @@ def multiply_m(a,b):
 def main():
     window = pygame.display.set_mode( (WINDOW_SIZE, WINDOW_SIZE) )
 
+    scale = 100
     while True:
         clock.tick(60)  # 60 fps
 
         for point in cube_points:
             point_2d = multiply_m(projection_matrix, point)
 
-            x = point_2d[0][0]
-            y = point_2d[1][0]
+            x = (point_2d[0][0] * scale) + WINDOW_SIZE / 2
+            y = (point_2d[1][0] * scale) + WINDOW_SIZE / 2
 
             pygame.draw.circle(window, (255, 0, 0), (x, y), 5)
 
