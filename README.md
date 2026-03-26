@@ -38,3 +38,10 @@ python main.py
 | `E` | Rotate clockwise (Z axis) |
 | `R` | Reset rotation |
 | `Ctrl+C` | Quit |
+
+## Demo!
+
+
+https://github.com/user-attachments/assets/1bc51148-5de0-41e2-9c68-8d23f54619e2
+
+
